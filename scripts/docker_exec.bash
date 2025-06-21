@@ -17,7 +17,9 @@ Options:
 }
 
 get_options=()
-start_options=(--gpus all --privileged)
+start_options=()
+use_gpu=false
+
 while [[ $# -gt 0 ]]; do
   case $1 in
     --pull|--build) get_options+=("$1") ;;
@@ -27,6 +29,10 @@ while [[ $# -gt 0 ]]; do
   esac
   shift
 done
+
+if $use_gpu;then
+  start_options+=(--gpus all --privileged)
+fi
 
 bash scripts/get_docker_dev_image.bash "${get_options[@]}"
 dockerdev_ensure_dev_container_started "$DOCKER_DEV_IMAGE" \
